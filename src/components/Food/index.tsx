@@ -17,21 +17,25 @@ interface IProps {
   food: IFoodPlate;
   handleDelete: (id: number) => {};
   handleEditFood: (food: IFoodPlate) => void;
+  handleFoodSwitchAvailability: (food: IFoodPlate) => Promise<void>;
 }
 
 const Food: React.FC<IProps> = ({
   food,
   handleDelete,
   handleEditFood,
+  handleFoodSwitchAvailability,
 }: IProps) => {
   const [isAvailable, setIsAvailable] = useState(food.available);
 
   async function toggleAvailable(): Promise<void> {
-    // TODO UPDATE STATUS (available)
+    setIsAvailable(!isAvailable);
+
+    handleFoodSwitchAvailability(food);
   }
 
   function setEditingFood(): void {
-    // TODO - SET THE ID OF THE CURRENT ITEM TO THE EDITING FOOD AND OPEN MODAL
+    handleEditFood(food);
   }
 
   return (
@@ -43,7 +47,7 @@ const Food: React.FC<IProps> = ({
         <h2>{food.name}</h2>
         <p>{food.description}</p>
         <p className="price">
-          R$ <b>{food.price}</b>
+          $ <b>{food.price}</b>
         </p>
       </section>
       <section className="footer">
@@ -68,7 +72,7 @@ const Food: React.FC<IProps> = ({
         </div>
 
         <div className="availability-container">
-          <p>{isAvailable ? 'Disponível' : 'Indisponível'}</p>
+          <p>{isAvailable ? 'Available' : 'Unavailable'}</p>
 
           <label htmlFor={`available-switch-${food.id}`} className="switch">
             <input
